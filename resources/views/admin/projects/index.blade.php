@@ -4,6 +4,12 @@
         <h1>Project List</h1>
         @foreach ($projects as $project)
             <p><a href="{{ route('admin.projects.show', $project->id) }}">{{ $project->title }}</a></p>
+
+            <form action="{{route('admin.projects.destroy', $project)}}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger text-white text-decoration-none">Delete</button>
+            </form>
         @endforeach
         <button class="btn btn-primary"><a href="{{route('admin.projects.create', $project)}}" class="text-white text-decoration-none"  >Crea</a></button>
     </section>
