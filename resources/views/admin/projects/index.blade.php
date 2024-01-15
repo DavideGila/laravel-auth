@@ -5,8 +5,8 @@
         <div class="row">
             @foreach ($projects as $project)
                 <div class="col-6">
-                    <img src="{{ $project->image }}" alt="" style="width: 660px; height:450px">
-                    <p><a href="{{ route('admin.projects.show', $project->id) }}">{{ $project->title }}</a></p>
+                    <img src="{{ asset('storage/' . $project->image) }}" alt="" style="width: 660px; height:450px">
+                    <p><a href="{{ route('admin.projects.show', $project) }}">{{ $project->title }}</a></p>
                     <form action="{{ route('admin.projects.destroy', $project) }}" method="POST">
                         @csrf
                         @method('DELETE')
