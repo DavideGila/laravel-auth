@@ -2,7 +2,7 @@
 @section('content')
     <section class="container">
         <h1>Project Create</h1>
-        <form action="{{ route('admin.projects.store') }}" method="POST">
+        <form action="{{ route('admin.projects.store') }}" enctype="multipart/form-data" method="POST">
         @csrf
      <div class="mb-3">
             <label for="title">Title</label>
@@ -24,7 +24,7 @@
     </div>
     <div class="mb-3">
                 <label for="image">Image</label>
-                <input type="url" class="form-control @error('image') is-invalid @enderror" name="image" id="image" value="{{old('image')}}">
+                <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image" value="{{old('image')}}">
                 @error('image')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
