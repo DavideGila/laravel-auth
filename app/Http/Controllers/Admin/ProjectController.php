@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,7 @@ class ProjectController extends Controller
         $formData = $request->validated();
 
         //CREATE SLUG
-        $slug = Str::slug($formData['title'], '-');
+        $slug = Project::getSlug($formData['title']);
 
         //add slug to formData
         $formData['slug'] = $slug;
@@ -48,7 +49,13 @@ class ProjectController extends Controller
         //aggiungiamo l'id dell'utente
         $formData['user_id'] = $userId;
 
+
+        if ($request->hasFile('image')){
+            $img_path = Storage::put('uploads', $formData['image']);
+            $formData['image'] = $img_path;
+        }
         $project = Project::create($formData);
+
         return redirect()->route('admin.projects.show', $project->id);
     }
 
@@ -76,13 +83,25 @@ class ProjectController extends Controller
         $formData = $request->validated();
 
         //CREATE SLUG
-        $slug = Str::slug($formData['title'], '-');
+        if ($project->title !== $formData['title']) {
+            //CREATE SLUG
+            $slug = Project::getSlug($formData['title']);
+        }
 
         //add slug to formData
         $formData['slug'] = $slug;
 
         //aggiungiamo l'id dell'utente
         $formData['user_id'] = $project->user_id;
+        if ($request->hasFile('image')) {
+            if ($project->image) {
+                Storage::delete($project->image);
+            }
+
+            $path = Storage::put('images', $formData['image']);
+            $formData['image'] = $path;
+        }
+
 
         $project->update($formData);
         return redirect()->route('admin.projects.show', $project->id);
